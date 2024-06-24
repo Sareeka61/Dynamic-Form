@@ -28,6 +28,7 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
           </div>
         );
       } else if (fieldSchema.multiline) {
+        // Render multiline text fields
         return (
           <div>
             <label>{fieldSchema.title}</label>
@@ -42,6 +43,7 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
         );
       } else {
       return (
+        // Renders default text field
         <div>
           <label>{fieldSchema.title}</label>
           <input
