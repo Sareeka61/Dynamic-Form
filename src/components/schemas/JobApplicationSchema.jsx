@@ -64,7 +64,7 @@ export const JobApplicationSchema = {
         },
         additionalInfo:{
             type:"string",
-            title:"Any Additional Info",
+            title:"Additional Info",
             maxLength: 500
         }
     },

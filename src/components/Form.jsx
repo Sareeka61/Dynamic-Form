@@ -11,7 +11,7 @@ const schemas = {
   userProfile: UserProfileFormSchema, 
 }
 
-export const Form = ({formType='contact'}) => {
+export const Form = ({formType='jobApplication'}) => {
 
   const [formData, setFormData] = useState({});
   const fieldSchema = schemas[formType]
@@ -21,19 +21,12 @@ export const Form = ({formType='contact'}) => {
     return regex.test(email);
   };
 
+  console.log('Form Data Submitted:', formData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log('Form Data Submitted:', formData)
-
-    const emailField = fieldSchema.properties.email;
-    
-    if (emailField && emailField.type === 'string' && !validateEmail(formData.email)) {
-      alert("Invalid Email Address!");
-      return;
-    }
-
-    console.log('Form Data Submitted:', formData);
     setFormData({});
     setErrors({});
   }
