@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import '../cssfiles/formfield.css';
 
 export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) => {
   const emailErrorRef = useRef(null);
   const phoneErrorRef = useRef(null);
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
     if (fieldKey === "email") {
@@ -12,6 +13,8 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
       validatePhone(value);
     }
   }, [value]);
+
+  // Handling change in the field
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -24,6 +27,8 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     }
   };
 
+  // Handing change in file
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -31,10 +36,17 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
       onChange(fieldKey, reader.result);
     };
     if (file) {
-      reader.readAsDataURL(file);
+      // Accepting only pdf files
+      if (file.type !== "application/pdf") {
+        setFileError("File format should be PDF");
+      } else {
+        setFileError("");
+        reader.readAsDataURL(file);
+      }
     }
   };
 
+  // Validating email
   const validateEmail = (email) => {
     if (emailErrorRef.current) {
       if (email === "") {
@@ -50,6 +62,7 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     }
   };
 
+  // Validate the entered phone number
   const validatePhone = (phone) => {
     if (phoneErrorRef.current) {
       if (phone === "") {
@@ -108,9 +121,11 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
             <input
               type="file"
               name={fieldKey}
+              accept="application/pdf"
               onChange={handleFileChange}
               required={fieldSchema.required}
             />
+            {fileError && <p className="field-error">{fileError}</p>}
           </div>
         );
       } else {

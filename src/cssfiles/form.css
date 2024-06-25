@@ -82,9 +82,17 @@ button {
 button:hover{
     background-color: white;
     color:rgb(93, 179, 241);
-    border: 2px solid rgb(93, 179, 241);
+    border: 1px solid rgb(93, 179, 241);
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
 
+.form-type-buttons {
+    display: flex;
+}
+
+.form-type-buttons button {
+    margin-right: 8px;
+    margin-bottom: 40px;
 }
 
 @media screen and (max-width: 600px) {
