@@ -16,12 +16,20 @@ export const JobApplicationSchema = {
         email: {
             type: "string",
             title: "Email Address",
-            placeholder: "Enter your email address"
+            placeholder: "Enter your email address",
+            validation: {
+                regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                errorMessage: "Invalid email address"
+            }
         },
         phone: {
             type: "string",
             title: "Phone Number",
-            placeholder: "Enter your phone number"
+            placeholder: "Enter your phone number",
+            validation: {
+                regex: /^\d+$/,
+                errorMessage: "Phone number must contain only digits"
+            }
         },
         country: {
             type: "string",

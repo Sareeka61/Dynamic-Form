@@ -11,7 +11,11 @@ export const ContactFormSchema = {
         email: {
             type: "string",
             title: "Email",
-            placeholder:"Your email"
+            placeholder:"Your email",
+            validation: {
+                regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                errorMessage: "Invalid email address"
+            }
         },
         message: {
             type: "string",
