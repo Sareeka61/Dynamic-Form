@@ -2,28 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import '../cssfiles/formfield.css';
 
 export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) => {
-  const errorRef = useRef(null);  // Creating reference for error display
-  const [fileError, setFileError] = useState("");  // Managing file errors
-  const [touched, setTouched] = useState(false);  // Tracking if the field has been touched
+  const errorRef = useRef(null);
+  const [fileError, setFileError] = useState("");
+  const [touched, setTouched] = useState(false);
 
-  // Running validation when value changes
   useEffect(() => {
-    if (fieldSchema.validation) {
-      validateField(value);  // Validating field after change
-    }
-  }, [value]);
-
-  // Handling changes for text, textarea, or select inputs
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setTouched(true);  // Marking the field as touched if interaction is done
-    onChange(fieldKey, value);
     if (fieldSchema.validation) {
       validateField(value);
     }
+  }, [value]);
+
+  const handleChange = (e) => {
+    const { type, checked, value } = e.target;
+    setTouched(true);
+    const newValue = type === "checkbox" ? checked : value;
+    onChange(fieldKey, newValue);
+    if (fieldSchema.validation) {
+      validateField(newValue);
+    }
   };
 
-  // Handling file input changes
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setTouched(true);
@@ -41,7 +39,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     }
   };
 
-  // Validating the input field
   const validateField = (value) => {
     if (!fieldSchema.validation) return;
 
@@ -49,7 +46,7 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     const pattern = new RegExp(regex);
 
     if (required && !value) {
-      showError("This field is required");  // Showing error for empty required field
+      showError("This field is required");
       return;
     }
 
@@ -61,7 +58,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     clearError();
   };
 
-  // Displaying validation error message
   const showError = (message) => {
     if (touched) {
       errorRef.current.style.display = "block";
@@ -69,7 +65,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
     }
   };
 
-  // Clearing validation error
   const clearError = () => {
     errorRef.current.style.display = "none";
     errorRef.current.innerText = "";
@@ -79,7 +74,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
   switch (fieldSchema.type) {
     case "string":
       if (fieldSchema.enum) {
-        // Rendering select dropdown for enum options
         return (
           <div>
             <label>{fieldSchema.title}</label>
@@ -99,7 +93,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
           </div>
         );
       } else if (fieldSchema.multiline) {
-        // Rendering textarea for multiline input
         return (
           <div>
             <label>{fieldSchema.title}</label>
@@ -114,7 +107,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
           </div>
         );
       } else if (fieldSchema.format === "data-url") {
-        // Rendering file input for PDF uploads
         return (
           <div>
             <label>{fieldSchema.title}</label>
@@ -129,7 +121,6 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
           </div>
         );
       } else {
-        // Rendering basic text input field
         return (
           <div>
             <label>{fieldSchema.title}</label>
@@ -145,6 +136,46 @@ export const FormField = ({ fieldKey, fieldSchema, value, onChange, required }) 
           </div>
         );
       }
+
+    case "boolean":
+      // Checkbox field
+      return (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              name={fieldKey}
+              checked={value || false}
+              onChange={handleChange}
+              required={required}
+            />
+            {fieldSchema.title}
+          </label>
+        </div>
+      );
+
+    case "radio":
+      // Radio button group
+      return (
+        <div>
+          <label>{fieldSchema.title}</label>
+          {fieldSchema.enum.map((option) => (
+            <div key={option}>
+              <label>
+                <input
+                  type="radio"
+                  name={fieldKey}
+                  value={option}
+                  checked={value === option}
+                  onChange={handleChange}
+                  required={required}
+                />
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
+      );
 
     default:
       return null;

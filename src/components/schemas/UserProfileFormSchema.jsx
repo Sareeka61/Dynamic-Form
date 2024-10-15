@@ -17,19 +17,15 @@ export const UserProfileFormSchema = {
             type: "string",
             title: "Phone Number",
             placeholder: "Enter your phone number",
-            validation: {
-                regex: /^\d+$/,
-                errorMessage: "Phone number must contain only digits"
-            }
+            pattern: "^\\d+$",
+            errorMessage: "Phone number must contain only digits"
         },
         email: {
             type: "string",
             title: "Email Address",
             placeholder: "Enter your email address",
-            validation: {
-                regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                errorMessage: "Invalid email address"
-            }
+            format: "email",
+            errorMessage: "Invalid email address"
         },
         country: {
             type: "string",
